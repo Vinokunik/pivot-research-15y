@@ -21,12 +21,12 @@ jobs:
         env:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           GOOGLE_CREDS: ${{ secrets.GOOGLE_CREDS }}
-        run: python research_time.py
+        run: python research_trading.py
 
       - name: Upload Results
         uses: actions/upload-artifact@v4
         with:
           name: pivot-tables
           path: |
-            table_tickers.csv
-            table_rating.csv
+            trade_model_tickers.csv
+            trade_model_rating.csv
