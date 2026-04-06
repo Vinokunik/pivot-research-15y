@@ -11,7 +11,7 @@ from google.oauth2.service_account import Credentials
 SHEET_NAME = 'Pivot Vinokunik'
 START_CAPITAL = 100000
 RISK_PER_TRADE = 0.10  # 10% от капитала
-TP_RATIO = 2.0         # Тейк в 2 раза больше стопа
+TP_RATIO = 3.0         # Тейк в 2 раза больше стопа
 TAX = 0.25
 PERIOD = "15y"
 
