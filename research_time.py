@@ -11,7 +11,7 @@ from google.oauth2.service_account import Credentials
 SHEET_NAME = 'Pivot Vinokunik'
 INVESTMENT = 1000
 TAX = 0.25
-HOLD_PERIOD = 1 
+HOLD_PERIOD = 8 
 PERIOD = "15y"
 
 def get_combinations():
