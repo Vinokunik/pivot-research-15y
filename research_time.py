@@ -20,14 +20,32 @@ PERIOD = "15y"
 def get_combinations():
     return [''.join(p) for p in itertools.product('+-', repeat=6)]
 
+# --- ИЗМЕНЕННЫЙ БЛОК В НАЧАЛЕ ФУНКЦИИ analyze() ---
+
 def analyze():
     # Авторизация Google
     scopes = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
-    creds_dict = json.loads(os.environ.get('GOOGLE_CREDS'))
+    creds_env = os.environ.get('GOOGLE_CREDS')
+    if not creds_env:
+        print("Ошибка: GOOGLE_CREDS не найдены")
+        return
+        
+    creds_dict = json.loads(creds_env)
     creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
     gc = gspread.authorize(creds)
+    
+    # ОТКРЫВАЕМ НОВЫЙ ЛИСТ
     sh = gc.open(SHEET_NAME)
-    tickers = sh.get_worksheet(0).col_values(1)[1:]
+    try:
+        worksheet = sh.worksheet('SPX500') # Читаем именно этот лист
+    except:
+        print("Лист SPX500 не найден, берем первый лист")
+        worksheet = sh.get_worksheet(0)
+        
+    tickers = worksheet.col_values(1)[1:] # Берем тикеры из первой колонки
+    
+    # Ограничим для теста или берем все 500
+    print(f"Загружено {len(tickers)} тикеров из листа SPX500. Начинаем расчет...")
 
     all_trades = []
     combos_list = get_combinations()
