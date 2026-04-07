@@ -12,8 +12,8 @@ from datetime import datetime
 SHEET_NAME = 'Pivot Vinokunik'
 START_CAPITAL = 100000
 RISK_PER_TRADE = 0.10
-TP_RATIO = 2.0
-HOLD_PERIOD = 2  # для выхода по времени
+TP_RATIO = 4.0
+HOLD_PERIOD = 1  # для выхода по времени
 TAX = 0.25
 PERIOD = "15y"
 
