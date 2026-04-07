@@ -13,7 +13,7 @@ SHEET_NAME = 'Pivot Vinokunik'
 START_CAPITAL = 100000
 RISK_PER_TRADE = 0.10  # 10% от капитала
 TP_RATIO = 4.0
-HOLD_PERIOD = 1
+HOLD_PERIOD = 4
 TAX = 0.25
 PERIOD = "15y"
 
