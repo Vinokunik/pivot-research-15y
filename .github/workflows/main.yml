@@ -1,6 +1,6 @@
 name: Pivot Research 15y
 on:
-  workflow_dispatch: # Запуск вручную
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,21 +12,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10' # Обновили до 3.10
 
       - name: Install dependencies
-        run: pip install yfinance pandas gspread google-auth
+        run: pip install yfinance pandas gspread google-auth openpyxl # Добавили openpyxl
 
       - name: Run research
         env:
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           GOOGLE_CREDS: ${{ secrets.GOOGLE_CREDS }}
         run: python research_trading.py
 
       - name: Upload Results
         uses: actions/upload-artifact@v4
         with:
-          name: pivot-tables
-          path: |
-            trade_model_tickers.csv
-            trade_model_rating.csv
+          name: pivot-results
+          path: "*.xlsx" # Ищем все Excel файлы
