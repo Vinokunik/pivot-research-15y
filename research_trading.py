@@ -12,8 +12,8 @@ from datetime import datetime
 SHEET_NAME = 'Pivot Vinokunik'
 START_CAPITAL = 100000
 RISK_PER_TRADE = 0.10  # 10% от капитала
-TP_RATIO = 4.0
-HOLD_PERIOD = 1
+TP_RATIO = 2.0
+HOLD_PERIOD = 2
 TAX = 0.25
 PERIOD = "15y"
 
@@ -35,8 +35,9 @@ def analyze_all_strategies():
         return
 
     timestamp = datetime.now().strftime("%y%m%d_%H%M")
+    report_name = f"Report_{PERIOD}_{int(START_CAPITAL/1000)}k_TP{TP_RATIO}_{timestamp}"
     report_name = f"Report_{PERIOD}_{int(START_CAPITAL/1000)}k_TP{TP_RATIO}_H{HOLD_PERIOD}_R{int(RISK_PER_TRADE*100)}pct_{timestamp}"
-    
+
     all_results = []
     # Сумма сделки = 10% от стартового капитала
     investment_amount = START_CAPITAL * RISK_PER_TRADE 
@@ -46,10 +47,10 @@ def analyze_all_strategies():
         try:
             df = yf.download(ticker, period=PERIOD, interval="1wk", progress=False)
             if df.empty or len(df) < 20: continue
-            
+
             if isinstance(df.columns, pd.MultiIndex):
                 df.columns = df.columns.get_level_values(0)
-            
+
             df = df.dropna()
             h, l, o, c, v = df['High'], df['Low'], df['Open'], df['Close'], df['Volume']
 
@@ -81,7 +82,7 @@ def analyze_all_strategies():
                 out_p_time = c.iloc[i + HOLD_PERIOD]
                 # Процентное изменение цены
                 change = (entry_p - out_p_time) / entry_p if is_high else (out_p_time - entry_p) / entry_p
-                
+
                 all_results.append({'Combo': combo, 'Strategy': 'Trend_Time', 'PnL': change * investment_amount})
                 all_results.append({'Combo': combo, 'Strategy': 'Counter_Time', 'PnL': -change * investment_amount})
 
