@@ -5,6 +5,7 @@ import itertools
 import os
 import json
 import gspread
+import openpyxl
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
@@ -23,7 +24,10 @@ def get_combinations():
 def analyze_all_strategies():
     # 1. АВТОРИЗАЦИЯ
     creds_dict = json.loads(os.environ.get('GOOGLE_CREDS'))
-    creds = Credentials.from_service_account_info(creds_dict, ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'])
+    creds = Credentials.from_service_account_info(
+        creds_dict, 
+        scopes=['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+    )
     gc = gspread.authorize(creds)
     sh = gc.open(SHEET_NAME)
     try:
