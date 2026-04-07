@@ -35,7 +35,7 @@ def analyze_all_strategies():
         return
 
     timestamp = datetime.now().strftime("%y%m%d_%H%M")
-    report_name = f"Report_{PERIOD}_{int(START_CAPITAL/1000)}k_TP{TP_RATIO}_{timestamp}"
+    report_name = f"Report_{PERIOD}_{int(START_CAPITAL/1000)}k_TP{TP_RATIO}_H{HOLD_PERIOD}_R{int(RISK_PER_TRADE*100)}pct_{timestamp}"
     
     all_results = []
     # Сумма сделки = 10% от стартового капитала
