@@ -114,21 +114,34 @@ def analyze_all_strategies():
 
         except: continue
 
-    # ФОРМИРОВАНИЕ ИТОГОВЫХ ТАБЛИЦ
-    final_df = pd.DataFrame(all_results)
-    
-    # Создаем 4 разных отчета по типам стратегий
-    with pd.ExcelWriter(f"{report_name}.xlsx") as writer:
-        for strat in ['Trend_Time', 'Counter_Time', 'Trend_SLTP', 'Counter_SLTP']:
-            strat_df = final_df[final_df['Strategy'] == strat]
-            report = strat_df.groupby('Combo')['PnL'].agg([
-                ('Total_Profit', 'sum'),
-                ('Win_Rate', lambda x: (x > 0).mean() * 100),
-                ('Count', 'count')
-            ]).sort_values('Total_Profit', ascending=False)
-            report.to_excel(writer, sheet_name=strat)
-
-    print(f"Исследование завершено: {report_name}")
-
-if __name__ == "__main__":
+   # --- ПРОВЕРКА НА ПУСТОТУ ПЕРЕД СОХРАНЕНИЕМ ---
+    if all_results:
+        final_df = pd.DataFrame(all_results)
+        
+        # Динамическое имя файла (исправлено)
+        file_name = f"{report_name}.xlsx"
+        
+        with pd.ExcelWriter(file_name, engine='openpyxl') as writer:
+            found_any = False
+            for strat in ['Trend_Time', 'Counter_Time', 'Trend_SLTP', 'Counter_SLTP']:
+                # Фильтруем данные по стратегии
+                strat_df = final_df[final_df['Strategy'] == strat]
+                
+                if not strat_df.empty:
+                    report = strat_df.groupby('Combo')['PnL'].agg([
+                        ('Total_Profit', 'sum'),
+                        ('Win_Rate', lambda x: (x > 0).mean() * 100),
+                        ('Count', 'count')
+                    ]).sort_values('Total_Profit', ascending=False)
+                    
+                    report.to_excel(writer, sheet_name=strat)
+                    found_any = True
+            
+            # Если вдруг ни одна стратегия не дала результатов, создаем пустой лист для корректного сохранения
+            if not found_any:
+                pd.DataFrame([["No data found"]]).to_excel(writer, sheet_name="Empty")
+                
+        print(f"Исследование завершено успешно: {file_name}")
+    else:
+        print("ВНИМАНИЕ: Сделок не найдено. Проверьте список тикеров или условия пивотов.")
     analyze_all_strategies()
